@@ -1,94 +1,32 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <limits>
 
 class Node {
     public:
-        Node* left = NULL;
-        Node* right = NULL;
+        Node* left;
+        Node* right;
         int data;
 
-        Node(int data) {
-            this->data = data;
+        Node() {
+            data = -1;
+            left = NULL;
+            right = NULL;
+        }
+
+        Node(int x) {
+            data = x;
+            left = NULL;
+            right = NULL;
         }
 
         ~Node();
 };
 
-class BST {
-
-    private:
-        Node* root = NULL;
-
-    public:
-        
-        BST() {}
-        ~BST();
-
-        void insert(int data) {
-            Node* newNode = new Node(data);
-            if (this->root == NULL) {
-                this->root = newNode;
-                return;
-            }
-
-            bool inserted = false;
-            Node* currentNode = this->root;
-            while (!inserted) {
-                if (newNode->data < currentNode->data) {
-                    // go left
-                    if (currentNode->left == NULL) {
-                        currentNode->left = newNode;
-                        inserted = true;
-                    } else {
-                        currentNode = currentNode->left;
-                    }
-                } else if (newNode->data > currentNode->data) {
-                    // go right 
-                    if (currentNode->right == NULL) {
-                        currentNode->right = newNode;
-                        inserted = true;
-                    } else {
-                        currentNode = currentNode->right;
-                    }
-                } else {
-                    // already exists
-                    return;
-                }
-            }
-        }
-
-        std::string search(int data) {
-            std::string path = "";
-            Node* currentNode = this->root;
-            path.append("" + this->root->data);
-            while (currentNode != NULL) {
-                if (currentNode->data == data) {
-                    // found
-                }
-
-                path.append(", " + currentNode->data);
-                break;  // REMOVETHIS
-            }
-        }
-};
-
-bool isNumber(std::string x) {
-    for (long unsigned int i = 0; i < x.length(); i++) {
-        if (isdigit(x[i]) == false) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 int getChoice(std::vector<std::string> choices) {
     bool isValidInput = false;
     int counter;
-    std::string input;
-    int choice;
+    int input;
     while (!isValidInput) {
         counter = 0;
         for (auto i = choices.begin(); i != choices.end(); i++) {
@@ -100,32 +38,109 @@ int getChoice(std::vector<std::string> choices) {
         std::cin >> input;
         std::cout << std::endl;
 
-        if (isNumber(input)) {
-            choice = std::stoi(input);
-            if (choice > 0 && choice <= counter) {
-                isValidInput = true;
-            } else {
-                std::cout << "Invalid input. Choice must be between 1 and " << counter << std::endl;
-            }
+        if (input > 0 && input <= counter) {
+            isValidInput = true;
         } else {
-            std::cout << "Invalid input. Choice must be a NUMBER between 1 and " << counter << std::endl;
+            std::cout << "Invalid input. Must be between 1 and " << counter << std::endl;
         }
         
-
         std::cout << std::endl;
     }
 
-    return choice-1;
+    return input-1;
+}
+
+void insert(Node* root, int data) {
+    if (root->data == -1) {
+        root->data = data;
+        return;
+    }
+
+    Node* current = root;
+    Node* new_node = new Node(data);
+    bool inserted = false;
+    while (!inserted) {
+        if (new_node->data < current->data) {
+            // go left
+            if (current->left == NULL) {
+                current->left = new_node;
+                inserted = true;
+            } else {
+                current = current->left;
+            }
+        } else if (new_node->data > current->data) {
+            // go right
+            if (current->right == NULL) {
+                current->right = new_node;
+                inserted = true;
+            } else {
+                current = current->right;
+            }
+        } else {
+            // node already present
+            inserted = true;
+        }
+    }
+}
+
+std::string search(Node* root, int data) {
+    std::string search_path = "Path:";
+    Node* current = root;
+    while (current != NULL) {
+        search_path += " " + std::to_string(current->data);
+
+        if (data < current->data) {
+            // go left
+            current = current->left;
+        } else if (data > current->data) {
+            // go right
+            current = current->right;
+        } else {
+            // MATCH
+            break;
+        }
+    }
+
+    if (current == NULL) {
+        // no match found
+        search_path += " ... No match found.";
+    } else {
+        search_path += " ... Match found!";
+    }
+
+    return search_path;
 }
 
 int main(int argc, char* argv[]) {
     std::vector<std::string> choices = { "Insert", "Search" };
-    BST* bst = new BST();
-    
+
+    int selection;
+    int intInput;
+    std::string strInput;
+    std::string searchResult;
+    Node* root = new Node();
     bool running = true;
+   
     while (running) {
-        getChoice(choices);
-        running = false;
+        selection = getChoice(choices);
+
+        if (selection == 0) {
+            std::cout << "Enter number to insert: " << std::endl;
+            std::cin >> intInput;
+            
+            insert(root, intInput);
+        } else {
+            std::cout << "Enter number to search for: " << std::endl;
+            std::cin >> intInput;
+            searchResult = search(root, intInput);
+            std::cout << searchResult << std::endl;
+        }
+
+        std::cout << "Go again? [Y/n]: ";
+        std::cin >> strInput;
+        if (strInput.compare("y") != 0 && strInput.compare("Y") != 0) {
+            running = false;
+        }
     }
 
     return 0;
