@@ -2,32 +2,19 @@
 #include <string>
 #include <vector>
 
-class Node {
-    public:
-        Node* left;
-        Node* right;
-        int data;
+typedef struct node_t {
+    node_t* left;
+    node_t* right;
+    int data;
+    node_t() : left(NULL), right(NULL), data(-1) {}
+    node_t(int x) : left(NULL), right(NULL), data(x) {}
+} node_t;
 
-        Node() {
-            data = -1;
-            left = NULL;
-            right = NULL;
-        }
-
-        Node(int x) {
-            data = x;
-            left = NULL;
-            right = NULL;
-        }
-
-        ~Node();
-};
-
-int getChoice(std::vector<std::string> choices) {
-    bool isValidInput = false;
+int get_choice(std::vector<std::string> choices) {
+    bool is_valid_input = false;
     int counter;
     int input;
-    while (!isValidInput) {
+    while (!is_valid_input) {
         counter = 0;
         for (auto i = choices.begin(); i != choices.end(); i++) {
             counter++;
@@ -39,7 +26,7 @@ int getChoice(std::vector<std::string> choices) {
         std::cout << std::endl;
 
         if (input > 0 && input <= counter) {
-            isValidInput = true;
+            is_valid_input = true;
         } else {
             std::cout << "Invalid input. Must be between 1 and " << counter << std::endl;
         }
@@ -50,14 +37,14 @@ int getChoice(std::vector<std::string> choices) {
     return input-1;
 }
 
-void insert(Node* root, int data) {
+void insert(node_t* root, int data) {
     if (root->data == -1) {
         root->data = data;
         return;
     }
 
-    Node* current = root;
-    Node* new_node = new Node(data);
+    node_t* current = root;
+    node_t* new_node = new node_t(data);
     bool inserted = false;
     while (!inserted) {
         if (new_node->data < current->data) {
@@ -83,9 +70,9 @@ void insert(Node* root, int data) {
     }
 }
 
-std::string search(Node* root, int data) {
+std::string search(node_t* root, int data) {
     std::string search_path = "Path:";
-    Node* current = root;
+    node_t* current = root;
     while (current != NULL) {
         search_path += " " + std::to_string(current->data);
 
@@ -112,33 +99,31 @@ std::string search(Node* root, int data) {
 }
 
 int main(int argc, char* argv[]) {
-    std::vector<std::string> choices = { "Insert", "Search" };
+    std::vector<std::string> choices = { "Insert", "Search", "Exit" };
 
     int selection;
-    int intInput;
-    std::string strInput;
-    std::string searchResult;
-    Node* root = new Node();
+    int int_input;
+    std::string str_input;
+    std::string search_result;
+    node_t* root = new node_t();
     bool running = true;
    
     while (running) {
-        selection = getChoice(choices);
+        selection = get_choice(choices);
 
-        if (selection == 0) {
-            std::cout << "Enter number to insert: " << std::endl;
-            std::cin >> intInput;
-            
-            insert(root, intInput);
+        if (selection != ((int) choices.size() - 1)) {
+            if (selection == 0) {
+                std::cout << "Enter number to insert: " << std::endl;
+                std::cin >> int_input;
+                
+                insert(root, int_input);
+            } else {
+                std::cout << "Enter number to search for: " << std::endl;
+                std::cin >> int_input;
+                search_result = search(root, int_input);
+                std::cout << search_result << std::endl;
+            }
         } else {
-            std::cout << "Enter number to search for: " << std::endl;
-            std::cin >> intInput;
-            searchResult = search(root, intInput);
-            std::cout << searchResult << std::endl;
-        }
-
-        std::cout << "Go again? [Y/n]: ";
-        std::cin >> strInput;
-        if (strInput.compare("y") != 0 && strInput.compare("Y") != 0) {
             running = false;
         }
     }
