@@ -8,6 +8,7 @@ typedef struct node_t {
     int data;
     node_t() : left(NULL), right(NULL), data(-1) {}
     node_t(int x) : left(NULL), right(NULL), data(x) {}
+    ~node_t() { delete left; delete right; }
 } node_t;
 
 int get_choice(std::vector<std::string> choices) {
@@ -127,6 +128,8 @@ int main(int argc, char* argv[]) {
             running = false;
         }
     }
+
+    delete root;
 
     return 0;
 }
