@@ -43,8 +43,7 @@ int get_choice(std::vector<std::string> choices) {
 }
 
 
-node_t* min_value_node(node_t* node)
-{
+node_t* min_value_node(node_t* node) {
     node_t* current = node;
   
     /* loop down to find the leftmost leaf */
@@ -164,7 +163,6 @@ int main(int argc, char* argv[]) {
     }
 
     if (root != NULL) {
-        free(root);
         if (root->left != NULL) {
             free(root->left);
         }
@@ -172,6 +170,8 @@ int main(int argc, char* argv[]) {
         if (root->right != NULL) {
             free(root->right);
         }
+
+        free(root);
     }
 
     return 0;
