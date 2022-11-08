@@ -1,4 +1,4 @@
-To run the program:
+<pre>To run the program:
 
 make run input.txt output.txt
     or
@@ -6,4 +6,4 @@ make run input.txt output.txt
     where
 input.txt is the name of the input file
     and
-output.txt is the name of the output file
+output.txt is the name of the output file</pre>
