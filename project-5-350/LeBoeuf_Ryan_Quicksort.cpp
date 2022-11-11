@@ -1,9 +1,10 @@
 #include <iostream>
+#include <string>
+#include <vector>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <string>
-#include <vector>
+#include <chrono>
 
 #define FLOAT_PRECISION 5
 #define USAGE "USAGE: ./start input.txt output.txt"
@@ -89,12 +90,15 @@ int main(int argc, char** argv) {
 	std::ofstream output(argv[2]);
 	std::ifstream input(argv[1]);
 
-	//std::vector<float> buffer({ 40.23, 30, 20, 50, 10.24353 });
 	std::vector<float> buffer = file_to_vector(input);
 
+	auto start = std::chrono::high_resolution_clock::now();
 	quicksort(buffer, 0, buffer.size()-1);
-	
-	print_array(buffer);
+	auto stop = std::chrono::high_resolution_clock::now();
+
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+	std::cout << "Exec: " << (duration.count() / 1000.0) << " ms" << std::endl;
 
 	vector_to_file(output, buffer);
 
