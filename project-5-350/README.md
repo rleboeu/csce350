@@ -1,6 +1,6 @@
 <pre>To run the program:
 
-make run input.txt output.txt
+make run
     or
 ./start input.txt output.txt
     where
