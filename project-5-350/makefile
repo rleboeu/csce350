@@ -12,6 +12,6 @@ compile:
 run:
 	./${EXE} ${FILEIN} ${FILEOUT}
 mem:
-	valgrind ${EXE} ${VFLAGS}
+	valgrind ./${EXE} ${VFLAGS}
 clean:
 	rm ./${EXE}
