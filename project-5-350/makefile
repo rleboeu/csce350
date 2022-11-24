@@ -1,17 +1,14 @@
-SRC=LeBoeuf_Ryan_Quicksort.cpp
+SRC=LeBoeuf_Ryan_Quicksort.cpp LeBoeuf_Ryan_InputFileGenerator.cpp main.cpp
 EXE=start
 CXX=g++
 CFLAGS=-Wall --std=c++11
 VFLAGS=--leak-check=full
 
-FILEIN=input.txt
-FILEOUT=output.txt
-
 compile:
 	${CXX} ${CFLAGS} ${SRC} -o ${EXE}
 run:
-	./${EXE} ${FILEIN} ${FILEOUT}
+	./${EXE}
 mem:
-	valgrind ${VFLAGS} ./${EXE} ${FILEIN} ${FILEOUT}
+	valgrind ${VFLAGS} ./${EXE}
 clean:
-	rm ./${EXE} ${FILEIN} ${FILEOUT}
+	rm ./${EXE} ${FILEOUT}

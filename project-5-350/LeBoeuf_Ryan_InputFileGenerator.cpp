@@ -1,12 +1,20 @@
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <iomanip>
-#include <string>
+#include "LeBoeuf_Ryan_InputFileGenerator.h"
 
-#define NUM_FILES 25
-#define BOUND 500
-#define FLOAT_PRECISION 5
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <sstream>
+
+void vector_to_file(std::ofstream& file,std::vector<float> arr) {
+	int before_last = arr.size()-1;
+	for (auto a = arr.begin(); a != arr.end(); a++) {
+		file << std::fixed << std::setprecision(FLOAT_PRECISION) << *a;
+
+		if (std::distance(arr.begin(), a) < before_last) {
+			file << " ";
+		}
+	}
+}
 
 std::vector<float> random_float(int input_size) {
     std::vector<float> values;
@@ -24,39 +32,44 @@ std::vector<float> random_float(int input_size) {
     return values;
 }
 
-// assume file is already open
-void vector_to_file(std::ofstream &file, std::vector<float> arr) {
-	int before_last = arr.size()-1;
-	for (auto a = arr.begin(); a != arr.end(); a++) {
-		file << std::fixed << std::setprecision(FLOAT_PRECISION) << *a;
-
-		if (std::distance(arr.begin(), a) < before_last) {
-			file << " ";
-		}
-	}
-}
-
-void generate_files(std::vector<int> input_sizes) {
+std::vector<std::vector<float>> generate_datasets(std::vector<int> input_sizes) {
+    std::vector<std::vector<float>> datasets;
+    
     for (auto a = input_sizes.begin(); a != input_sizes.end(); a++) {
-        std::string filename;
         int input_size = *a;
 
-        for (int i = 0; i < NUM_FILES; i++) {
-            filename = std::to_string(input_size) + "_" + std::to_string(i) + ".txt";
-            std::cout << filename << std::endl;
-            std::ofstream file(filename);
-
-            std::vector<float> values = random_float(input_size);
-            vector_to_file(file, values);
-
-            file.close();
+        for (int i = 0; i < NUM_SETS; i++) {
+            datasets.push_back(random_float(input_size));
         }
-    }    
+    }
+
+    return datasets;
 }
 
-int main(int argc, char** argv) {
-    std::vector<int> input_sizes({10,100,1000});
-    generate_files(input_sizes);
+// split a string delimited by space into vector 
+std::vector<std::string> split(std::string s) {
+    std::stringstream ss(s);
+    std::string word;
+	std::vector<std::string> tokens;
 
-    return 0;
+    while (ss >> word) {
+        tokens.push_back(word);
+    }
+
+	return tokens;
+}
+
+std::vector<float> file_to_vector(std::ifstream &file) {
+	std::vector<std::string> tokens;
+	std::vector<float> values;
+	std::string line;
+
+	std::getline(file, line);
+	tokens = split(line);
+
+	for (std::string s : tokens) {
+		values.push_back(std::stof(s));
+	}	
+
+	return values;
 }
