@@ -59,11 +59,10 @@ int main(int argc, char** argv) {
 	}
 
 	// Log execution times
-	execfile << "input_size avg_exec_time(ms)\n";
 	for (auto a = execution_times.begin(); a != execution_times.end(); a++) {
 		a->avg_exec_time /= NUM_SETS;
 
-		execfile << a->input_size << " " << a->avg_exec_time << "\n";
+		execfile << a->input_size << "    " << a->avg_exec_time << "\n";
 	}
 
 	execfile.close();
