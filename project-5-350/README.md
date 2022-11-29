@@ -10,4 +10,4 @@ To run the program:
         /home/albert/LeBoeuf_Ryan_Project5/inputs/
             and
         /home/albert/LeBoeuf_Ryan_Project5/outputs/
-    should exist and be empty. </pre>
+    should exist. These directories (inputs/, outputs/) do not need to be empty.</pre>
